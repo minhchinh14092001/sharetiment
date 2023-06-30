@@ -13,6 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
   // const [user, setUser] = useState(null);
   const responseGoogle = (response) => {
+    localStorage.setItem('user', JSON.stringify(response.profileObj));
     var profileObj = jwt_decode(response.credential);
     const { name, sub, imageUrl } = profileObj;
     const user = {
