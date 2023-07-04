@@ -7,7 +7,7 @@ import { Sidebar, UserProfile } from '../components';
 import { userQuery } from '../utils/data';
 import { client } from '../client';
 import Pins from './Pins';
-import logo from '../assets/logo.png';
+import sharetimentlogo from '../assets/sharetimentlogo.png';
 
 const Home = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -15,9 +15,20 @@ const Home = () => {
   const scrollRef = useRef(null);
 
   const userInfo = localStorage.getItem('user') !== 'undefined' ? JSON.parse(localStorage.getItem('user')) : localStorage.clear();
+  // console.log(userInfo)
+
+//   const userInfo = localStorage.getItem('user');
+// if (userInfo !== null && userInfo !== 'undefined') {
+//   const parsedUserInfo = JSON.parse(userInfo);
+//   // Handle the parsed user information
+//   console.log(parsedUserInfo);
+// } else {
+//   // Value is either null or 'undefined'
+//   console.log('User information is not available.');
+// }
 
   useEffect(() => {
-    const query = userQuery(userInfo?.googleId);
+    const query = userQuery(userInfo?._id);
 
     client.fetch(query).then((data) => {
       setUser(data[0]);
@@ -37,14 +48,14 @@ const Home = () => {
         <div className="p-2 w-full flex flex-row justify-between items-center shadow-md">
           <HiMenu fontSize={40} className="cursor-pointer" onClick={() => setToggleSidebar(true)} />
           <Link to="/">
-            <img src={logo} alt="logo" className="w-28" />
+            <img src={sharetimentlogo} alt="logo" className="w-28" />
           </Link>
           <Link to={`user-profile/${user?._id}`}>
-            <img src={user?.image} alt="user-pic" className="w-9 h-9 rounded-full " />
+            <img src={userInfo?.image} alt="user-pic" className="w-9 h-9 rounded-full " />
           </Link>
-          <Link to={`user-profile/${user?._id}`}>
-          <p>{user?.userName}</p>
-          </Link>
+          {/* <Link to={`user-profile/${user?._id}`}>
+          <p>{userInfo?.userName}</p>
+          </Link> */}
         </div>
         {toggleSidebar && (
         <div className="fixed w-4/5 bg-white h-screen overflow-y-auto shadow-md z-10 animate-slide-in">

@@ -5,28 +5,50 @@ import shareVideo from '../assets/share.mp4';
 import logo from '../assets/logowhite.png';
 import { GoogleLogin, useGoogleOneTapLogin, googleLogout } from '@react-oauth/google';
 import jwt_decode from 'jwt-decode';
-
 import { client } from '../client';
 
 const Login = () => {
 
   const navigate = useNavigate();
-  // const [user, setUser] = useState(null);
   const responseGoogle = (response) => {
-    localStorage.setItem('user', JSON.stringify(response.profileObj));
-    var profileObj = jwt_decode(response.credential);
-    const { name, sub, imageUrl } = profileObj;
-    const user = {
+    
+    var profileObject = jwt_decode(response.credential);
+    const { name, sub, picture } = profileObject;
+    const doc = {
       _id: sub,
       _type: 'user',
       userName: name,
-      image: imageUrl,
+      image: picture,
     };
-    client.createIfNotExists(user).then(() => {
+    localStorage.setItem('user', JSON.stringify(doc));
+    client.createIfNotExists(doc).then(() => {
       navigate('/', { replace: true });
     });
-    console.log('Google Account Information:', user);
+    console.log('Google Account Information:', doc);
   };
+  // Retrieve the user item from localStorage
+const userItem = localStorage.getItem('user');
+
+// Check if the user item exists
+if (userItem) {
+  // Convert the JSON string back to an object
+  const user = JSON.parse(userItem);
+
+  // Log the user object to the console
+  console.log('User Item:', user);
+
+  // You can access individual properties of the user object like this:
+  const userId = user._id;
+  const userName = user.userName;
+  const userProfileImage = user.image;
+
+  console.log('User ID:', userId);
+  console.log('User Name:', userName);
+  console.log('User Profile Image:', userProfileImage);
+} else {
+  console.log('User item not found in localStorage.');
+}
+  
 
   return (
     <div className='flex justify-start items-center flex-col h-screen'>
@@ -55,5 +77,9 @@ const Login = () => {
     
   )
 }
+
+// export const setUserInfoInLocalStorage = (doc) => {
+//   localStorage.setItem('user', JSON.stringify(doc));
+// };
 
 export default Login
